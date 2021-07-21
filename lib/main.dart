@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
-void main() {
-  runApp(MyApp());
+const DSN_STR = '';
+
+Future<void> main() async {
+  await SentryFlutter.init(
+    (options) => options.dsn = DSN_STR,
+    appRunner: () => runApp(MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -48,15 +54,18 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
+  void _incrementCounter() async {
+    /*setState(() {
       _counter++;
-    });
+    });*/
+    try {
+      throw Exception();
+    } catch (exception, stackTrace) {
+      await Sentry.captureException(
+        exception,
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   @override
